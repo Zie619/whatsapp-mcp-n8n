@@ -73,4 +73,6 @@ Make sure to update paths, environment variables, and ports to fit your use-case
 
 ---
 
-Let me know if you want it reworded, expanded, or if you need usage instructions too!
+to add it to n8n console use 
+command : nc
+Arguments : whatsapp-mcp-server 9000
