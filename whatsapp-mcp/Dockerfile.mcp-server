@@ -1,0 +1,28 @@
+FROM python:3.11-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    sqlite3 \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy Python dependencies
+COPY whatsapp-mcp-server/pyproject.toml ./
+
+# Install Python dependencies using pip
+RUN pip install --no-cache-dir httpx>=0.28.1 "mcp[cli]>=1.6.0" requests>=2.32.3
+
+# Copy source code
+COPY whatsapp-mcp-server/ ./
+
+# Create a volume mount point for the database
+RUN mkdir -p /app/store
+
+# Expose stdio for MCP communication
+# Note: MCP uses stdio, so no port exposure needed
+
+# Run the MCP server
+CMD ["python", "main.py"] 

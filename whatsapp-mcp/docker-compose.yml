@@ -1,0 +1,39 @@
+services:
+  whatsapp-bridge:
+    build:
+      context: .
+      dockerfile: Dockerfile.whatsapp-bridge
+    container_name: whatsapp-bridge
+    ports:
+      - "8080:8080"
+    volumes:
+      - whatsapp_store:/app/store
+    environment:
+      - TZ=UTC
+    restart: unless-stopped
+
+  whatsapp-mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp-server
+    container_name: whatsapp-mcp-server
+    volumes:
+      - whatsapp_store:/app/store
+      - ./media:/app/media:rw
+    environment:
+      - TZ=UTC
+    depends_on:
+      - whatsapp-bridge
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    # The MCP server communicates via stdio, so we need to keep it running
+    # and allow interactive access for MCP clients
+
+volumes:
+  whatsapp_store:
+    driver: local
+
+networks:
+  default:
+    name: whatsapp-mcp-network 

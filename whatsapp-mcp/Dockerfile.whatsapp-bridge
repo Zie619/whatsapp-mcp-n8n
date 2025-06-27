@@ -1,0 +1,40 @@
+FROM golang:1.24.1-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache git gcc musl-dev sqlite-dev
+
+# Set working directory
+WORKDIR /app
+
+# Copy go mod files
+COPY whatsapp-bridge/go.mod whatsapp-bridge/go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy source code
+COPY whatsapp-bridge/ ./
+
+# Build the application
+RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o whatsapp-bridge .
+
+# Final stage
+FROM alpine:latest
+
+# Install runtime dependencies
+RUN apk --no-cache add ca-certificates sqlite sqlite-dev
+
+# Create app directory
+WORKDIR /app
+
+# Create store directory for database
+RUN mkdir -p store
+
+# Copy binary from builder stage
+COPY --from=builder /app/whatsapp-bridge .
+
+# Expose port
+EXPOSE 8080
+
+# Run the application
+CMD ["./whatsapp-bridge"] 
