@@ -72,7 +72,4 @@ Place this block under the `services:` section.
 Make sure to update paths, environment variables, and ports to fit your use-case.
 
 ---
-
-to add it to n8n console use 
-command : nc
-Arguments : whatsapp-mcp-server 9000
+![alt text](<Screenshot from 2025-06-28 00-53-54.png>)
