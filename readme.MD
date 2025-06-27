@@ -71,5 +71,7 @@ networks:
 Place this block under the `services:` section.
 Make sure to update paths, environment variables, and ports to fit your use-case.
 
+#docker compose build 
+#docker compose up -d 
 ---
 ![alt text](<Screenshot from 2025-06-28 00-53-54.png>)
